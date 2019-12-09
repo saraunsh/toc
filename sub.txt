@@ -1,0 +1,92 @@
+#assignment : 3
+
+select person.last_name, person.first_name, order_item.order_no
+from person
+inner join order_item
+on person.P_ID=order_item=P_ID;
+
+select person.last_name, person.first_name, order_item.order_no
+from person
+left join order_item
+on person.P_ID=order_item=P_ID;
+
+select name from employee 
+where designation=(select designation from eployee where name = 'Raj');
+
+#assignment 4
+
+mysql> delimeter /
+> CREATE PROCEDURE sp()
+> begin
+> DECLARE x int default 0;
+> DECLARE y varchar(20) default 0;
+> DECLARE z int(10) default 0;
+> DECLARE finished int default 0;
+> DECLARE r
+> cursor for 
+> select emp_no,emp_name,salary
+> from EMPLOYEE_
+> order by salary desc limit 5;
+> DECLARE CONTINUE HANDLER
+> FOR NOT FOUND SET finished=1;
+> open r;
+> lp:loop
+> FETCH r into x,y,z;
+> IF finished =1 THEN LEAVE lp;
+> end if;
+> select x,y,z;
+> END LOOP lp;
+> CLOSE r;
+> end;
+> /  
+
+
+mysql > DELIMETER ;
+mysql > CALL raj.sp();
+
+
+#assignment : 5
+
+mysql> delimeter /
+> CREATE PROCEDURE GETRANK(IN crc varchar(255))
+> begin
+> DECLARE distinction int default 0;
+> DECLARE firstclass int default 0;
+> DECLARE highersec int default 0;
+> DECLARE sec int default 0;
+> DECLARE pass int default 0;
+> DECLARE per int default 0;
+> DECLARE finished int default 0;
+> DECLARE r
+> cursor for 
+> select Percentage from student_course
+> where course=crc;
+> DECLARE CONTINUE HANDLER
+> FOR NOT FOUND SET finished=1
+> open r;
+> lp:loop
+> FETCH r into per;
+> IF finished =1 THEN LEAVE lp;
+> elseif per<100 and per>=80 then set distinction :=distinction+1;
+> elseif per<80 and per>=70 then set firstclass :=firstclass+1;
+> elseif per<70 and per>=60 then set highersec :=highersec+1;
+> elseif per<60 and per>=50 then set sec :=sec+1;
+> elseif per<50 then set pass:=pass+1;
+> end if;
+> END LOOP lp;
+> CLOSE r;
+> Select distinction, firstclass, highersec, sec, pass;
+> end;
+> /
+
+mysql > DELIMETER ;
+mysql > CALL student_course.GETRANK('DBMS');
+
+
+
+
+
+#assignment : 8
+
+db.customers.ensureIndex({"title":1, "description":-1})
+db.customers.aggregate([{$group: {_id:"first_name",num_tutorial:{$sum:1}}}]);  
