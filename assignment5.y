@@ -1,26 +1,33 @@
 %{
-	#include<stdio.h>
-	#include<stdlib.h>
+#include<stdio.h>
+void yyerror(char*);
+int yylex();
+FILE* yyin;
 %}
 
-%token conj word
+%token NOUN PRONOUN ADJECTIVE VERB ADVERB CONJUNCTION PREPOSITION
 
 %%
-sentance:compound {printf("\ncompound sentence\n"); }
+sentence: compound { printf("COMPOUND SENTENCE\n");}
 	|
-	simple {printf("\nSimple sentence\n"); };
-compound:S1 conj S1;
-S1:word S1|S1 word|word ;
-simple:word simple|simple word|word ;
+	simple {printf("SIMPLE SENTENCE\n");}
+	;
+simple: subject VERB object;
 
+compound: subject VERB object CONJUNCTION subject VERB object;
+
+subject: NOUN|PRONOUN;
+
+object: NOUN|ADJECTIVE NOUN|ADVERB NOUN|PREPOSITION NOUN;
 %%
-
-int yyerror(char *msg){
-printf("error\n");
-exit(0);
+void yyerror(char *s)
+{
+printf("ERROR:%s",s);
 }
-int main(){
-printf("\nEnter the line == \n");
+int main(int argc,char* argv[])
+{
+yyin=fopen(argv[1],"r");
 yyparse();
+fclose(yyin);
+return 0;
 }
-
