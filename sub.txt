@@ -83,10 +83,63 @@ mysql > DELIMETER ;
 mysql > CALL student_course.GETRANK('DBMS');
 
 
-
-
-
 #assignment : 8
 
 db.customers.ensureIndex({"title":1, "description":-1})
 db.customers.aggregate([{$group: {_id:"first_name",num_tutorial:{$sum:1}}}]);  
+
+
+#assignement : 10
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+
+public class sql_demo {
+
+    public static void main(String args[]){
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con= DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/Database_Name","username","password");
+            Statement stmt=con.createStatement();
+            String select = "select * from STUDENT";
+            System.out.println("Displaying STUDENT table :- ");
+            ResultSet rs=stmt.executeQuery(select);
+            while(rs.next())
+                System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getInt(3));
+
+            String insert = "insert into STUDENT values (6,'MPQ',20), (7,'YOP',40), (8,'AXI',70)";
+
+            boolean ps = stmt.execute(insert);
+            if (ps){
+                System.out.println("INSERT OPERATION FAILED..!!");
+            }else {
+                System.out.println("INSERT SUCCESSFULL..!!");
+            }
+            String update = "update STUDENT set MARKS=35 where ID=3";
+
+            int us = stmt.executeUpdate(update);
+            System.out.println("\nPerforming update operation :- ");
+            System.out.println( us + " rows affected in the table...!!");
+            String delete = "delete from STUDENT where NAME='ABC'";
+
+            boolean ds = stmt.execute(delete);
+            if(ds){
+                System.out.println("DELETE OPERATION FAILED...!!");
+            }else {
+                System.out.println("DELETE SUCCESFULL..!!");
+            }
+
+            rs = stmt.executeQuery(select);
+
+            System.out.println("Displaying STUDENT table :- ");
+            while(rs.next())
+                System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getInt(3));
+
+            con.close();
+        }catch(Exception e){ System.out.println(e);}
+    }
+}
